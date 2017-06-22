@@ -93,11 +93,6 @@ public class DiceQTResultArchiver extends Recorder implements SimpleBuildStep {
 		return BuildStepMonitor.NONE;
 	}
 	
-	@Override
-	public Action getProjectAction(AbstractProject<?, ?> project) {
-		return new DiceQTResultProjectAction(project);
-	}
-
 	public static void archiveResults(Run<?, ?> build, FilePath workspace,
 			TaskListener listener, String pathToResults)
 					throws InterruptedException, IOException {
@@ -154,6 +149,15 @@ public class DiceQTResultArchiver extends Recorder implements SimpleBuildStep {
 			build.save();
 		} else {
 			build.addAction(action);
+		}
+
+		// Also save the project action;
+		DiceQTResultProjectAction projectAction = build.getAction(
+				DiceQTResultProjectAction.class);
+		if (projectAction == null) {
+			projectAction = new DiceQTResultProjectAction(
+					build.getParent());
+			build.addAction(projectAction);
 		}
 	}
 

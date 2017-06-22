@@ -92,10 +92,16 @@ public class DiceQTResultArchiverTest {
 		
 		archiver.perform((Run<?, ?>) run, workspace, launcher, listener);
 		
-		ArgumentCaptor<DiceQTResultBuildAction> actionArgument = ArgumentCaptor.forClass(
-				DiceQTResultBuildAction.class);
-		verify(run).addAction(actionArgument.capture());
-		assertEquals(expected, actionArgument.getValue().getMetrics());
+		ArgumentCaptor<Action> actionArgument = ArgumentCaptor.forClass(
+				Action.class);
+		verify(run, times(2)).addAction(actionArgument.capture());
+		List<Action> allArguments = actionArgument.getAllValues();
+		assertEquals(DiceQTResultBuildAction.class,
+				allArguments.get(0).getClass());
+		assertEquals(DiceQTResultProjectAction.class,
+				allArguments.get(1).getClass());
+		assertEquals(expected, ((DiceQTResultBuildAction)allArguments.get(0))
+				.getMetrics());
 	}
 	
 	@Rule
@@ -114,7 +120,7 @@ public class DiceQTResultArchiverTest {
 		
 		DiceQTResultArchiver archiver = this.getArchiver(
 				new DiceQTResultArchiver(metricsFileName));
-		
+
 		thrown.expect(FileNotFoundException.class);
 		thrown.expectMessage("metrics file");
 		thrown.expectMessage(metricsFileName);
@@ -135,10 +141,14 @@ public class DiceQTResultArchiverTest {
 		
 		archiver.perform((Run<?, ?>) run, workspace, launcher, listener);
 		
-		ArgumentCaptor<DiceQTResultBuildAction> actionArgument = ArgumentCaptor.forClass(
-				DiceQTResultBuildAction.class);
-		verify(run).addAction(actionArgument.capture());
-		assertEquals(expected, actionArgument.getValue().getMetrics());
+		ArgumentCaptor<Action> actionArgument = ArgumentCaptor.forClass(
+				Action.class);
+		verify(run, times(2)).addAction(actionArgument.capture());
+		List<Action> allArguments = actionArgument.getAllValues();
+		assertEquals(DiceQTResultBuildAction.class, allArguments.get(0).getClass());
+		assertEquals(DiceQTResultProjectAction.class, allArguments.get(1).getClass());
+
+		assertEquals(expected, ((DiceQTResultBuildAction)allArguments.get(0)).getMetrics());
 	}
 	
 	/**

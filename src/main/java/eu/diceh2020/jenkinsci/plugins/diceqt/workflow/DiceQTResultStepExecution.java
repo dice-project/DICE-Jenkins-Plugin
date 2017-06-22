@@ -20,6 +20,8 @@ import hudson.model.TaskListener;
  */
 public class DiceQTResultStepExecution extends AbstractSynchronousNonBlockingStepExecution<Void> {
 
+	private static final long serialVersionUID = -2900018672800475708L;
+
 	@StepContextParameter
 	private transient TaskListener listener;
 

@@ -42,6 +42,7 @@ import hudson.model.*;
 import hudson.util.DataSetBuilder;
 import hudson.util.Graph;
 import hudson.util.RunList;
+import jenkins.model.RunAction2;
 
 /***
  * This class implements the view summarizing the whole project.
@@ -51,11 +52,24 @@ import hudson.util.RunList;
  * @author matej.artac@xlab.si
  *
  */
-public class DiceQTResultProjectAction implements Action {
+public class DiceQTResultProjectAction implements RunAction2 {
 
-	private final AbstractProject<?, ?> project;
+	private final transient Job<?, ?> project;
 
+
+	/**
+	 * Compatibility constructor. Prevents mockit from getting confused.
+	 * @param project
+	 */
 	DiceQTResultProjectAction(final AbstractProject<?, ?> project) {
+		this.project = project;
+	}
+
+	/**
+	 * Constructor
+	 * @param project
+	 */
+	DiceQTResultProjectAction(final Job<?, ?> project) {
 		this.project = project;
 	}
 	
@@ -77,9 +91,9 @@ public class DiceQTResultProjectAction implements Action {
 
 	/**
 	* Method necessary to get the side-panel included in the Jelly file
-	* @return this {@link AbstractProject}
+	* @return this {@link Job}
 	*/
-	public AbstractProject<?, ?> getProject() {
+	public Job<?, ?> getProject() {
 		return this.project;
 	}
 	
@@ -215,5 +229,17 @@ public class DiceQTResultProjectAction implements Action {
 			
 			return chart;
 		}
+	}
+
+	@Override
+	public void onAttached(Run<?, ?> r) {
+		System.err.println("Project Action attached");
+		System.err.println(r);
+	}
+
+	@Override
+	public void onLoad(Run<?, ?> r) {
+		System.err.println("Project Action loaded");
+		System.err.println(r);
 	}
 }

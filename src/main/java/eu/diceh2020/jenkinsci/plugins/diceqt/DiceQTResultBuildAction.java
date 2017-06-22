@@ -36,6 +36,7 @@ import org.kohsuke.stapler.StaplerProxy;
 
 import hudson.model.*;
 import hudson.util.StreamTaskListener;
+import jenkins.model.RunAction2;
 
 /**
  * This class stores the DICE Quality Testing results of a build. The main
@@ -49,7 +50,7 @@ import hudson.util.StreamTaskListener;
  * @author matej.artac@xlab.si
  *
  */
-public class DiceQTResultBuildAction implements Action, StaplerProxy {
+public class DiceQTResultBuildAction implements RunAction2, StaplerProxy {
 	
 	// Stores the build results
 	private Hashtable<String, Number> metrics = null;
@@ -124,7 +125,7 @@ public class DiceQTResultBuildAction implements Action, StaplerProxy {
 			if (result != null)
 				return result;
 		}
-		
+
 		try {
 			result = new DiceQTBuildResult(this,
 					StreamTaskListener.fromStdout());
@@ -140,5 +141,15 @@ public class DiceQTResultBuildAction implements Action, StaplerProxy {
 	public void setDiceQTResultHistory(
 			WeakReference<DiceQTBuildResult> diceQTResultHistory) {
 		this.diceQTResult = diceQTResultHistory;
+	}
+
+	@Override
+	public void onAttached(Run<?, ?> r) {
+		System.err.println("Build Action attached");
+	}
+
+	@Override
+	public void onLoad(Run<?, ?> r) {
+		System.err.println("Build Action loaded");
 	}
 }
