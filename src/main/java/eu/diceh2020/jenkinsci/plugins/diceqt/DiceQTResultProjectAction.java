@@ -154,6 +154,18 @@ public class DiceQTResultProjectAction implements Action {
 		return retval;
 	}
 	
+	/**
+	 * Indicates whether this project has had any runs that produced
+	 * metrics.
+	 * @return True if at least one run produced metrics, or false
+	 *         otherwise.
+	 */
+	public boolean hasMetrics() {
+		ArrayList<String> names = this.getMetricNames();
+
+		return !names.isEmpty();
+	}
+
 	private MetricsHistory getCurrentBuildHistory () {
 		final MetricsHistory history = new MetricsHistory(0);
 		
