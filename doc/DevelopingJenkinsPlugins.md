@@ -47,6 +47,7 @@ script.
 
 The goal is to have a link in the navigation sidebar (on the left) of the
 build's result that will take the user to a custom view of that build.
+[This page][On actions] attempts to clarify this by describing `Action`s.
 
 * Implement a class that implements the `hudson.model.Action` interface. Or
   any of its subinterfaces, or extend an implementing class.
@@ -85,6 +86,22 @@ the Action implementation.
 * If Jenkins complains from hell with "No page found 'sidepanel.jelly'", then
   the `it` parameter is probably `null`.
 
+### Adding a project-level report
+
+* At the project (job) level, we a gain add an extension of an `Action` to add
+  the links, icons and elements such as graph appear when the user opens a
+  job/project in Jenkins.
+* When we had only the Freestyle builds where we could override the
+  `getProjectAction` method in the recorder class.
+* A much more general way for project level actions that do not persist any
+  data themselves is to introduce them to the list of available actions via
+  an extension such as `TransientActionFactory`.
+* The approach from the preceding bullet affects all the projects in Jenkins,
+  so the extension has to check if the project actually contains anything that
+  makes it reasonable to display links and dashboards.
+
+[On actions]: https://wiki.jenkins-ci.org/display/JENKINS/Action+and+its+family+of+subtypes
+
 ## Jenkins Pipeline support
 
 Quick points about migration to the pipelines:
@@ -103,7 +120,6 @@ Quick points about migration to the pipelines:
 * Project actions have a similar situation: using `AbstractProject` does not
   work for `org.jenkinsci.plugins.workflow.job.WorkflowJob`. Using `Job` as
   a replacement works just as well.
-* We need to remove `
 
 References:
 
